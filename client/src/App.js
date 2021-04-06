@@ -8,6 +8,8 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 const styles = theme => ({
   root: {
@@ -17,36 +19,40 @@ const styles = theme => ({
   },
   table: {
     minWidth: 1080
+  },
+  progress: {
+    margin: theme.spacing(2)
   }
 });
 
-const customers = [{
-  id: "1",
-  image: "http://www.newscj.com/news/photo/201001/31870_28928_182.jpg",
-  name: "홍길동",
-  birth: "961122",
-  gender: "남",
-  job : "도둑",
-},
-{
-  id: "2",
-  image: "https://inthestatus.com/jkwp/wp-content/uploads/2020/04/%EA%B3%A0%EA%B8%B8%EB%8F%99_6120200415092553.jpg",
-  name: "고길동",
-  birth: "710304",
-  gender: "남",
-  job : "모름",
-},
-{
-  id: "3",
-  image: "https://cgeimage.commutil.kr/phpwas/restmb_allidxmake.php?idx=3&simg=201001131408300020936dgame_1.jpg",
-  name: "손오공",
-  birth: "850613",
-  gender: "남",
-  job : "무직",
-}]
+
 
 
 class App extends Component {
+
+  state = {
+    customers: "",
+    completed: 0
+  }
+
+  componentDidMount() {
+    this.timer = setInterval(this.progress, 100);
+    this.callApi()
+    .then(res => this.setState({customers: res}))
+    .catch(err => alert(err))
+  }
+
+  callApi = async() => {
+    const response = await fetch('api/customers');
+    const body = await response.json();
+    return body;
+  }
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({completed :  completed >= 100 ? 0 : completed + 1});
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -63,7 +69,7 @@ class App extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {customers.map(customer=>{
+            {this.state.customers ? this.state.customers.map(customer=>{
               return(
                 <Customer 
                   key={customer.id} 
@@ -76,7 +82,12 @@ class App extends Component {
                 >
                 </Customer>
               );
-            })}
+            }) : 
+            <TableRow>
+              <TableCell colSpan="6" align="center">
+                <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed}></CircularProgress>
+              </TableCell>
+            </TableRow>}
           </TableBody>
         </Table>      
       </Paper>
