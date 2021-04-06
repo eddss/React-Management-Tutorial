@@ -1,3 +1,7 @@
 .gray-background{
   background: darkgray;
 }
+
+.customer-line{
+  border-bottom : 0.5em solid darkgray;
+}
