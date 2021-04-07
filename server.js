@@ -1,8 +1,23 @@
+var mysql = require('mysql');
+
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
+const { Console } = require('console');
 const port = process.env.PORT || 5000;
+
+var data = fs.readFileSync('../database.json');
+var connectionString = JSON.parse(data);
+var connection = mysql.createConnection({
+   "host": connectionString.host,
+   "user": connectionString.user,
+   "password": connectionString.password,
+   "port": connectionString.port,
+   "database": connectionString.database
+});
+connection.connect();
 
 app.use(cors());
 app.use(express.json());
@@ -13,32 +28,13 @@ app.get('/api/hello', (req, res) => {
 
 app.get('/api/customers', (req, res) => {
   console.log("aa");
-    res.send([
-      {
-         "id":"1",
-         "image":"http://www.newscj.com/news/photo/201001/31870_28928_182.jpg",
-         "name":"홍길동",
-         "birth":"961122",
-         "gender":"남",
-         "job":"도둑"
-      },
-      {
-         "id":"2",
-         "image":"https://inthestatus.com/jkwp/wp-content/uploads/2020/04/%EA%B3%A0%EA%B8%B8%EB%8F%99_6120200415092553.jpg",
-         "name":"고길동",
-         "birth":"710304",
-         "gender":"남",
-         "job":"모름"
-      },
-      {
-         "id":"3",
-         "image":"https://cgeimage.commutil.kr/phpwas/restmb_allidxmake.php?idx=3&simg=201001131408300020936dgame_1.jpg",
-         "name":"손오공",
-         "birth":"850613",
-         "gender":"남",
-         "job":"무직"
+  connection.query(
+     "select * from CUSTOMER",
+     (err, rows, fields) => {
+        console.log(rows);
+           res.send(rows);
       }
-   ]);
+   );
 });
 
 app.listen(port, ()=> console.log(`Listening on port ${port}`));

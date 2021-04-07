@@ -38,12 +38,16 @@ class App extends Component {
   componentDidMount() {
     this.timer = setInterval(this.progress, 100);
     this.callApi()
-    .then(res => this.setState({customers: res}))
+    .then(res => {
+        this.setState({customers: res})
+        console.log(res);
+      }
+    )
     .catch(err => alert(err))
   }
 
   callApi = async() => {
-    const response = await fetch('api/customers');
+    const response = await fetch('sample/sample_list2');
     const body = await response.json();
     return body;
   }
