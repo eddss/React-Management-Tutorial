@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import CustomerDelete from './CustomerDelete';
 
 class Customer extends Component {
+    /*shouldComponentUpdate(newProps, newState) {
+        debugger;
+        console.log(this.props);
+        console.log(newProps);
+        if(this.props.id === newProps.id) {
+            return false;
+        }
+
+        return true;
+    }*/
     render() {
         return(   
             <> 
@@ -15,6 +26,7 @@ class Customer extends Component {
                     <TableCell>{this.props.birth}</TableCell>
                     <TableCell>{this.props.gender}</TableCell>
                     <TableCell>{this.props.job}</TableCell>
+                    <TableCell><CustomerDelete id={this.props.id} stateRefresh={this.props.stateRefresh}></CustomerDelete></TableCell>
                 </TableRow>
             </>
         );
