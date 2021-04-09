@@ -176,7 +176,29 @@ class App extends Component {
     }
 
     const { classes } = this.props;
-    const cellList = ["번호", "프로필 이미지", "이름", "생년월일", "성별", "직업", "설정"]
+    const cellList = [{
+      "colname": "번호",
+      "width": "100px"
+    },{
+      "colname": "프로필 이미지",
+      "width": "100%"
+    },{
+      "colname": "이름",
+      "width": "200px"
+    },{
+      "colname": "생년월일",
+      "width": "150px"
+    },{
+      "colname": "성별",
+      "width": "100px"
+    },{
+      "colname": "직업",
+      "width": "200px"
+    },{
+      "colname": "설정",
+      "width": "100px"
+    }
+    ]
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -215,12 +237,21 @@ class App extends Component {
         </div>
         <Paper className={classes.paper}>
           <Table className={classes.table}>
+            <colgroup>
+              <col style={{width:'100px'}}/>
+              <col style={{width:'20%'}}/>
+              <col style={{width:'200px'}}/>
+              <col style={{width:'200px'}}/>
+              <col style={{width:'100px'}}/>
+              <col style={{width:'200px'}}/>
+              <col style={{width:'100px'}}/>
+            </colgroup>
             <TableHead>
               <TableRow>
                 {
                   cellList.map((c) => {
                     return(
-                      <TableCell className={classes.TableHead}>{c}</TableCell>      
+                      <TableCell className={classes.TableHead} width={c.width}>{c.colname}</TableCell>      
                   )})
                 }
               </TableRow>
@@ -229,7 +260,7 @@ class App extends Component {
               {this.state.customers ?
                 filteredComponents(this.state.customers) : 
               <TableRow>
-                <TableCell colSpan="6" align="center">
+                <TableCell colSpan="7" align="center">
                   <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed}></CircularProgress>
                 </TableCell>
               </TableRow>}
