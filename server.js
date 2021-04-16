@@ -8,6 +8,7 @@ const cors = require('cors');
 const { Console } = require('console');
 const port = process.env.PORT || 5000;
 const path = require('path');
+const rountes = require('./classes');
 
 
 var data = fs.readFileSync('./database.json');
@@ -19,7 +20,7 @@ var connection = mysql.createConnection({
    "port": connectionString.port,
    "database": connectionString.database
 });
-connection.connect();
+//connection.connect();
 
 const multer = require('multer');
 const upload = multer({dest:'./upload'});
@@ -42,8 +43,9 @@ app.get('/api/hello', (req, res) => {
 app.get('/api/customers', (req, res) => {
   console.log("aa");
   connection.query(
-     "select * from CUSTOMER WHERE USE_FLAG = 1",
+     "select * from customer WHERE USE_FLAG = 1",
      (err, rows, fields) => {
+        //console.log(err);
         console.log(rows);
            res.send(rows);
       }
@@ -53,8 +55,8 @@ app.get('/api/customers', (req, res) => {
 app.use('/image', express.static('./upload'));
 
 app.post('/api/customers', upload.single('image'), (req, res) => {
-   let sql = 'insert into CUSTOMER (ID, NAME, BIRTH, GENDER, JOB, IMAGE, USE_FLAG, CREATE_DATE) ' + 
-   ' values ( IFNULL((select max(id) + 1 from CUSTOMER A), 1), ?, ?, ?, ?, ?, 1, NOW() )';
+   let sql = 'insert into customer (ID, NAME, BIRTH, GENDER, JOB, IMAGE, USE_FLAG, CREATE_DATE) ' + 
+   ' values ( IFNULL((select max(id) + 1 from customer A), 1), ?, ?, ?, ?, ?, 1, NOW() )';
    let image = '/image/' + req.file.filename;
    let name = req.body.name;
    let birth = req.body.birth;
@@ -72,16 +74,18 @@ app.post('/api/customers', upload.single('image'), (req, res) => {
 });
 
 app.delete('/api/customers/:id', (req, res) => {
-   let sql = 'UPDATE CUSTOMER SET USE_FLAG = 0, DELETE_DATE = NOW() WHERE ID = ?';
+   let sql = 'UPDATE customer SET USE_FLAG = 0, DELETE_DATE = NOW() WHERE ID = ?';
    let params = [req.params.id];
    console.log(req.params.id);
    connection.query(sql, params,(err, rows, fields) => {
       res.send(rows);
-      console.log(err);
+      //console.log(err);
       console.log(rows);
       console.log(fields);
    })
 
 })
+
+app.use('/', rountes);
 
 app.listen(port, ()=> console.log(`Listening on port ${port}`));
