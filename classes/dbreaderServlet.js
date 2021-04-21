@@ -18,7 +18,11 @@ var connection;
 router.get('/GetUserParametersEx', (req, res) => {
    console.log('GetUserParametersEx');
    connection = mysql.createConnection(db_info);
-   let name = req.body.name;
+   console.log('##################');
+   //console.log(req);
+   console.log('##################');
+   //console.log(req.body);
+   let name = req.query.name;
    let query = dbreaderBean.GetUserParametersEx(name);
    console.log(query);
    if(query === '') {

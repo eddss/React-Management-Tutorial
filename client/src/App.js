@@ -249,9 +249,9 @@ class App extends Component {
             <TableHead>
               <TableRow>
                 {
-                  cellList.map((c) => {
+                  cellList.map((c, index) => {
                     return(
-                      <TableCell className={classes.TableHead} width={c.width}>{c.colname}</TableCell>      
+                      <TableCell className={classes.TableHead} width={c.width} key={index}>{c.colname}</TableCell>      
                   )})
                 }
               </TableRow>
